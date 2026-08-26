@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Search Users</title>
+</head>
+
+<body>
+
+    <h1>Search Users 🔍</h1>
+
+    <form method="GET" action="{% url 'search_users' %}">
+
+        <input
+            type="text"
+            name="q"
+            value="{{ query }}"
+            placeholder="Search username..."
+            required
+        >
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+    <hr>
+
+    {% if query %}
+
+        <h2>
+            Search results for "{{ query }}"
+        </h2>
+
+        {% if users %}
+
+            {% for user in users %}
+
+                <div>
+
+                    <a href="{% url 'user_profile' user.username %}">
+                        {{ user.username }}
+                    </a>
+
+                </div>
+
+                <br>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No users found.
+            </p>
+
+        {% endif %}
+
+    {% endif %}
+
+    <br>
+
+    <a href="{% url 'home' %}">
+        ← Back to Home
+    </a>
+
+</body>
+</html>

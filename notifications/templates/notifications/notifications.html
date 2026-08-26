@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - Insta Clone{% endblock %}
+
+{% block content %}
+
+<div style="margin-bottom: 25px;">
+
+    <h1>
+        🔔 Notifications
+    </h1>
+
+    <p style="color: #8e8e8e; margin-top: 8px;">
+        Stay updated with your activity.
+    </p>
+
+</div>
+
+
+{% if notifications %}
+
+    {% for notification in notifications %}
+
+        <div class="notification">
+
+            {% if notification.notification_type == 'follow' %}
+
+                <p>
+                    👤
+                    <strong>
+                        <a href="{% url 'user_profile' notification.sender.username %}">
+                            {{ notification.sender.username }}
+                        </a>
+                    </strong>
+                    started following you.
+                </p>
+
+            {% elif notification.notification_type == 'like' %}
+
+                <p>
+                    ❤️
+                    <strong>
+                        <a href="{% url 'user_profile' notification.sender.username %}">
+                            {{ notification.sender.username }}
+                        </a>
+                    </strong>
+                    liked your post.
+                </p>
+
+                {% if notification.post %}
+
+                    <a
+                        href="{% url 'post_detail' notification.post.id %}"
+                        style="
+                            display: inline-block;
+                            margin-top: 8px;
+                            font-weight: bold;
+                            color: #0095f6;
+                        "
+                    >
+                        View Post →
+                    </a>
+
+                {% endif %}
+
+            {% elif notification.notification_type == 'comment' %}
+
+                <p>
+                    💬
+                    <strong>
+                        <a href="{% url 'user_profile' notification.sender.username %}">
+                            {{ notification.sender.username }}
+                        </a>
+                    </strong>
+                    commented on your post.
+                </p>
+
+                {% if notification.post %}
+
+                    <a
+                        href="{% url 'post_detail' notification.post.id %}"
+                        style="
+                            display: inline-block;
+                            margin-top: 8px;
+                            font-weight: bold;
+                            color: #0095f6;
+                        "
+                    >
+                        View Post →
+                    </a>
+
+                {% endif %}
+
+            {% endif %}
+
+            <small class="notification-date">
+                {{ notification.created_at }}
+            </small>
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <div class="empty">
+
+        <div style="font-size: 45px; margin-bottom: 15px;">
+            🔕
+        </div>
+
+        <h3>
+            No notifications yet
+        </h3>
+
+        <p style="margin-top: 10px;">
+            When someone follows you, likes your post,
+            or comments on it, you'll see it here.
+        </p>
+
+    </div>
+
+{% endif %}
+
+{% endblock %}

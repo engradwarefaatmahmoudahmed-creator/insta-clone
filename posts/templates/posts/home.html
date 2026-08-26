@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Insta Clone{% endblock %}
+
+{% block content %}
+
+<div style="margin-bottom: 30px;">
+
+    <h1 style="font-size: 28px; margin-bottom: 8px;">
+        Welcome to Insta Clone 📸
+    </h1>
+
+    <p style="color: #8e8e8e;">
+        Hello, {{ request.user.username }}!
+    </p>
+
+</div>
+
+
+<div class="search-box">
+
+    <form method="GET" action="{% url 'search_users' %}" style="display: flex; gap: 10px; width: 100%;">
+
+        <input
+            type="text"
+            name="q"
+            placeholder="Search users..."
+            required
+        >
+
+        <button type="submit" class="btn btn-primary">
+            🔍 Search
+        </button>
+
+    </form>
+
+</div>
+
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+
+    <h2>
+        Feed
+    </h2>
+
+    <a href="{% url 'create_post' %}" class="btn btn-primary">
+        ➕ Create Post
+    </a>
+
+</div>
+
+
+{% if posts %}
+
+    {% for post in posts %}
+
+        <article class="card">
+
+            <div class="card-header">
+
+                {% if post.user.profile_picture %}
+
+                    <img
+                        src="{{ post.user.profile_picture.url }}"
+                        alt="{{ post.user.username }}"
+                        style="
+                            width: 45px;
+                            height: 45px;
+                            border-radius: 50%;
+                            object-fit: cover;
+                        "
+                    >
+
+                {% else %}
+
+                    <div
+                        style="
+                            width: 45px;
+                            height: 45px;
+                            border-radius: 50%;
+                            background: #efefef;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 20px;
+                        "
+                    >
+                        👤
+                    </div>
+
+                {% endif %}
+
+                <div>
+
+                    <a
+                        href="{% url 'user_profile' post.user.username %}"
+                        style="font-weight: bold;"
+                    >
+                        {{ post.user.username }}
+                    </a>
+
+                    <div class="date">
+                        {{ post.created_at }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {% if post.image %}
+
+                <a href="{% url 'post_detail' post.id %}">
+
+                    <img
+                        src="{{ post.image.url }}"
+                        alt="Post by {{ post.user.username }}"
+                        class="card-image"
+                    >
+
+                </a>
+
+            {% endif %}
+
+
+            <div class="card-body">
+
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+
+                    <form
+                        method="POST"
+                        action="{% url 'like_post' post.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        {% if request.user in post.likes.all %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-secondary"
+                            >
+                                ❤️ Unlike
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-secondary"
+                            >
+                                🤍 Like
+                            </button>
+
+                        {% endif %}
+
+                    </form>
+
+                    <strong>
+                        {{ post.likes.count }} Likes
+                    </strong>
+
+                </div>
+
+
+                {% if post.caption %}
+
+                    <p class="caption">
+                        <strong>{{ post.user.username }}</strong>
+                        {{ post.caption }}
+                    </p>
+
+                {% endif %}
+
+
+                <div class="comments">
+
+                    <h4 style="margin-bottom: 10px;">
+                        Comments 💬
+                    </h4>
+
+
+                    {% for comment in post.comments.all %}
+
+                        <div class="comment">
+
+                            <span class="comment-user">
+                                {{ comment.user.username }}
+                            </span>
+
+                            <span>
+                                {{ comment.text }}
+                            </span>
+
+
+                            {% if comment.user == request.user %}
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'delete_comment' comment.id %}"
+                                    style="display: inline;"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        style="
+                                            background: none;
+                                            color: #ed4956;
+                                            margin-left: 8px;
+                                        "
+                                    >
+                                        🗑️
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% empty %}
+
+                        <p style="color: #8e8e8e;">
+                            No comments yet.
+                        </p>
+
+                    {% endfor %}
+
+
+                    <form
+                        method="POST"
+                        action="{% url 'add_comment' post.id %}"
+                        class="comment-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <input
+                            type="text"
+                            name="text"
+                            placeholder="Write a comment..."
+                            maxlength="300"
+                            required
+                        >
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Comment
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+
+                    <a
+                        href="{% url 'post_detail' post.id %}"
+                        style="font-weight: bold; color: #0095f6;"
+                    >
+                        View Post →
+                    </a>
+
+
+                    {% if post.user == request.user %}
+
+                        <form
+                            method="POST"
+                            action="{% url 'delete_post' post.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                            >
+                                🗑️ Delete
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </article>
+
+    {% endfor %}
+
+
+{% else %}
+
+    <div class="empty">
+
+        <h2>
+            No posts yet 📭
+        </h2>
+
+        <p style="margin-top: 10px;">
+            Follow users or create your first post.
+        </p>
+
+        <br>
+
+        <a href="{% url 'create_post' %}" class="btn btn-primary">
+            ➕ Create Your First Post
+        </a>
+
+    </div>
+
+{% endif %}
+
+{% endblock %}

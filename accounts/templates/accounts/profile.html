@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ profile_user.username }} - Profile{% endblock %}
+
+{% block content %}
+
+<div class="profile-header">
+
+    {% if profile_user.profile_picture %}
+
+        <img
+            src="{{ profile_user.profile_picture.url }}"
+            alt="{{ profile_user.username }}"
+            class="profile-picture"
+        >
+
+    {% else %}
+
+        <div
+            style="
+                width: 110px;
+                height: 110px;
+                border-radius: 50%;
+                background: #efefef;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 45px;
+                margin: 0 auto 15px;
+            "
+        >
+            👤
+        </div>
+
+    {% endif %}
+
+
+    <h1 class="profile-username">
+        {{ profile_user.username }}
+    </h1>
+
+
+    {% if profile_user.bio %}
+
+        <p class="profile-bio">
+            {{ profile_user.bio }}
+        </p>
+
+    {% else %}
+
+        <p class="profile-bio">
+            No bio yet.
+        </p>
+
+    {% endif %}
+
+
+    <p style="color: #555;">
+        {{ profile_user.email }}
+    </p>
+
+
+    <div style="
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin: 20px 0;
+    ">
+
+        <div>
+            <strong>{{ profile_user.followers.count }}</strong>
+            <div style="color: #8e8e8e;">
+                Followers
+            </div>
+        </div>
+
+        <div>
+            <strong>{{ profile_user.following.count }}</strong>
+            <div style="color: #8e8e8e;">
+                Following
+            </div>
+        </div>
+
+        <div>
+            <strong>{{ posts.count }}</strong>
+            <div style="color: #8e8e8e;">
+                Posts
+            </div>
+        </div>
+
+    </div>
+
+
+    <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+        ✏️ Edit Profile
+    </a>
+
+</div>
+
+
+<div style="
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+">
+
+    <h2>
+        My Posts 📸
+    </h2>
+
+    <a href="{% url 'create_post' %}" class="btn btn-primary">
+        ➕ Create Post
+    </a>
+
+</div>
+
+
+{% if posts %}
+
+    {% for post in posts %}
+
+        <article class="card">
+
+            <div class="card-header">
+
+                <strong>
+                    {{ profile_user.username }}
+                </strong>
+
+                <span class="date">
+                    {{ post.created_at }}
+                </span>
+
+            </div>
+
+
+            {% if post.image %}
+
+                <a href="{% url 'post_detail' post.id %}">
+
+                    <img
+                        src="{{ post.image.url }}"
+                        alt="Post by {{ profile_user.username }}"
+                        class="card-image"
+                    >
+
+                </a>
+
+            {% endif %}
+
+
+            <div class="card-body">
+
+                {% if post.caption %}
+
+                    <p class="caption">
+                        {{ post.caption }}
+                    </p>
+
+                {% endif %}
+
+
+                <p style="
+                    font-weight: bold;
+                    margin-bottom: 15px;
+                ">
+                    ❤️ {{ post.likes.count }} Likes
+                </p>
+
+
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                ">
+
+                    <a
+                        href="{% url 'post_detail' post.id %}"
+                        style="
+                            color: #0095f6;
+                            font-weight: bold;
+                        "
+                    >
+                        View Post →
+                    </a>
+
+
+                    <form
+                        method="POST"
+                        action="{% url 'delete_post' post.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                        >
+                            🗑️ Delete
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    {% endfor %}
+
+
+{% else %}
+
+    <div class="empty">
+
+        <h3>
+            You haven't created any posts yet. 📭
+        </h3>
+
+        <br>
+
+        <a
+            href="{% url 'create_post' %}"
+            class="btn btn-primary"
+        >
+            ➕ Create Your First Post
+        </a>
+
+    </div>
+
+{% endif %}
+
+{% endblock %}

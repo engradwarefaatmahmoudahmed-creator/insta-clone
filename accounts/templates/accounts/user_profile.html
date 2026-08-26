@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ profile_user.username }} - Profile</title>
+</head>
+
+<body>
+
+    <h1>{{ profile_user.username }}</h1>
+
+    {% if profile_user.profile_picture %}
+        <img
+            src="{{ profile_user.profile_picture.url }}"
+            alt="{{ profile_user.username }}"
+            width="150"
+            height="150"
+        >
+    {% else %}
+        <p>No profile picture</p>
+    {% endif %}
+
+    <p>
+        Email:
+        {{ profile_user.email }}
+    </p>
+
+    <p>
+        Bio:
+        {{ profile_user.bio }}
+    </p>
+
+    <p>
+        Followers:
+        {{ profile_user.followers.count }}
+    </p>
+
+    <p>
+        Following:
+        {{ profile_user.following.count }}
+    </p>
+
+    {% if request.user != profile_user %}
+
+        {% if is_following %}
+
+            <form method="POST" action="{% url 'unfollow_user' profile_user.username %}">
+                {% csrf_token %}
+
+                <button type="submit">
+                    Unfollow
+                </button>
+            </form>
+
+        {% else %}
+
+            <form method="POST" action="{% url 'follow_user' profile_user.username %}">
+                {% csrf_token %}
+
+                <button type="submit">
+                    Follow
+                </button>
+            </form>
+
+        {% endif %}
+
+    {% endif %}
+
+    <br>
+
+    <a href="{% url 'profile' %}">
+        My Profile
+    </a>
+
+    <br><br>
+
+    <a href="{% url 'home' %}">
+        Home
+    </a>
+
+</body>
+</html>
