@@ -33,7 +33,6 @@ A full-stack Instagram-style social media application built with Django.
 
 ## Project Structure
 
-```text
 Insta Clone/
 │
 ├── accounts/
@@ -43,8 +42,7 @@ Insta Clone/
 ├── templates/
 ├── static/
 │   └── css/
-├── media/
 ├── manage.py
-├── db.sqlite3
 ├── requirements.txt
+├── .gitignore
 └── README.md
