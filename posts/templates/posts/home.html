@@ -1,25 +1,30 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}Home - Insta Clone{% endblock %}
+{% block title %}
+    Home - Insta Clone
+{% endblock %}
 
 {% block content %}
 
-<div style="margin-bottom: 30px;">
+<div class="home-header">
 
-    <h1 style="font-size: 28px; margin-bottom: 8px;">
-        Welcome to Insta Clone 📸
-    </h1>
+    <div>
+        <h1>Insta Clone 📸</h1>
+        <p>
+            Welcome back, <strong>{{ request.user.username }}</strong> 👋
+        </p>
+    </div>
 
-    <p style="color: #8e8e8e;">
-        Hello, {{ request.user.username }}!
-    </p>
+    <a href="{% url 'create_post' %}" class="primary-link">
+        ➕ Create Post
+    </a>
 
 </div>
 
 
-<div class="search-box">
+<div class="search-card">
 
-    <form method="GET" action="{% url 'search_users' %}" style="display: flex; gap: 10px; width: 100%;">
+    <form method="GET" action="{% url 'search_users' %}">
 
         <input
             type="text"
@@ -28,7 +33,7 @@
             required
         >
 
-        <button type="submit" class="btn btn-primary">
+        <button type="submit">
             🔍 Search
         </button>
 
@@ -37,73 +42,44 @@
 </div>
 
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-
-    <h2>
-        Feed
-    </h2>
-
-    <a href="{% url 'create_post' %}" class="btn btn-primary">
-        ➕ Create Post
-    </a>
-
-</div>
+<h2 class="section-title">
+    Your Feed
+</h2>
 
 
 {% if posts %}
 
     {% for post in posts %}
 
-        <article class="card">
+        <article class="post-card">
 
-            <div class="card-header">
+            <div class="post-header">
 
-                {% if post.user.profile_picture %}
+                <a
+                    href="{% url 'user_profile' post.user.username %}"
+                    class="post-user"
+                >
+                    {% if post.user.profile_picture %}
 
-                    <img
-                        src="{{ post.user.profile_picture.url }}"
-                        alt="{{ post.user.username }}"
-                        style="
-                            width: 45px;
-                            height: 45px;
-                            border-radius: 50%;
-                            object-fit: cover;
-                        "
-                    >
+                        <img
+                            src="{{ post.user.profile_picture.url }}"
+                            alt="{{ post.user.username }}"
+                            class="avatar"
+                        >
 
-                {% else %}
+                    {% else %}
 
-                    <div
-                        style="
-                            width: 45px;
-                            height: 45px;
-                            border-radius: 50%;
-                            background: #efefef;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 20px;
-                        "
-                    >
-                        👤
-                    </div>
+                        <div class="avatar avatar-placeholder">
+                            👤
+                        </div>
 
-                {% endif %}
+                    {% endif %}
 
-                <div>
-
-                    <a
-                        href="{% url 'user_profile' post.user.username %}"
-                        style="font-weight: bold;"
-                    >
+                    <strong>
                         {{ post.user.username }}
-                    </a>
+                    </strong>
 
-                    <div class="date">
-                        {{ post.created_at }}
-                    </div>
-
-                </div>
+                </a>
 
             </div>
 
@@ -115,7 +91,7 @@
                     <img
                         src="{{ post.image.url }}"
                         alt="Post by {{ post.user.username }}"
-                        class="card-image"
+                        class="post-image"
                     >
 
                 </a>
@@ -123,45 +99,7 @@
             {% endif %}
 
 
-            <div class="card-body">
-
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-
-                    <form
-                        method="POST"
-                        action="{% url 'like_post' post.id %}"
-                    >
-
-                        {% csrf_token %}
-
-                        {% if request.user in post.likes.all %}
-
-                            <button
-                                type="submit"
-                                class="btn btn-secondary"
-                            >
-                                ❤️ Unlike
-                            </button>
-
-                        {% else %}
-
-                            <button
-                                type="submit"
-                                class="btn btn-secondary"
-                            >
-                                🤍 Like
-                            </button>
-
-                        {% endif %}
-
-                    </form>
-
-                    <strong>
-                        {{ post.likes.count }} Likes
-                    </strong>
-
-                </div>
-
+            <div class="post-content">
 
                 {% if post.caption %}
 
@@ -173,9 +111,75 @@
                 {% endif %}
 
 
-                <div class="comments">
+                <small class="post-date">
+                    {{ post.created_at }}
+                </small>
 
-                    <h4 style="margin-bottom: 10px;">
+
+                <div class="post-actions">
+
+                    <span>
+                        ❤️ {{ post.likes.count }} Likes
+                    </span>
+
+                    <form
+                        method="POST"
+                        action="{% url 'like_post' post.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        {% if request.user in post.likes.all %}
+
+                            <button type="submit" class="like-button">
+                                ❤️ Unlike
+                            </button>
+
+                        {% else %}
+
+                            <button type="submit" class="like-button">
+                                🤍 Like
+                            </button>
+
+                        {% endif %}
+
+                    </form>
+
+
+                    <a
+                        href="{% url 'post_detail' post.id %}"
+                        class="view-post"
+                    >
+                        💬 View Post
+                    </a>
+
+
+                    {% if post.user == request.user %}
+
+                        <form
+                            method="POST"
+                            action="{% url 'delete_post' post.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="delete-button"
+                            >
+                                🗑️ Delete
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="comments-section">
+
+                    <h4>
                         Comments 💬
                     </h4>
 
@@ -184,9 +188,9 @@
 
                         <div class="comment">
 
-                            <span class="comment-user">
+                            <strong>
                                 {{ comment.user.username }}
-                            </span>
+                            </strong>
 
                             <span>
                                 {{ comment.text }}
@@ -198,18 +202,13 @@
                                 <form
                                     method="POST"
                                     action="{% url 'delete_comment' comment.id %}"
-                                    style="display: inline;"
                                 >
 
                                     {% csrf_token %}
 
                                     <button
                                         type="submit"
-                                        style="
-                                            background: none;
-                                            color: #ed4956;
-                                            margin-left: 8px;
-                                        "
+                                        class="delete-comment"
                                     >
                                         🗑️
                                     </button>
@@ -222,7 +221,7 @@
 
                     {% empty %}
 
-                        <p style="color: #8e8e8e;">
+                        <p class="no-comments">
                             No comments yet.
                         </p>
 
@@ -245,47 +244,11 @@
                             required
                         >
 
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                        >
+                        <button type="submit">
                             Comment
                         </button>
 
                     </form>
-
-                </div>
-
-
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-
-                    <a
-                        href="{% url 'post_detail' post.id %}"
-                        style="font-weight: bold; color: #0095f6;"
-                    >
-                        View Post →
-                    </a>
-
-
-                    {% if post.user == request.user %}
-
-                        <form
-                            method="POST"
-                            action="{% url 'delete_post' post.id %}"
-                        >
-
-                            {% csrf_token %}
-
-                            <button
-                                type="submit"
-                                class="btn btn-danger"
-                            >
-                                🗑️ Delete
-                            </button>
-
-                        </form>
-
-                    {% endif %}
 
                 </div>
 
@@ -295,22 +258,23 @@
 
     {% endfor %}
 
-
 {% else %}
 
-    <div class="empty">
+    <div class="empty-state">
+
+        <div class="empty-icon">
+            📸
+        </div>
 
         <h2>
-            No posts yet 📭
+            No posts yet
         </h2>
 
-        <p style="margin-top: 10px;">
-            Follow users or create your first post.
+        <p>
+            Follow some users or create your first post!
         </p>
 
-        <br>
-
-        <a href="{% url 'create_post' %}" class="btn btn-primary">
+        <a href="{% url 'create_post' %}" class="primary-link">
             ➕ Create Your First Post
         </a>
 
@@ -319,3 +283,4 @@
 {% endif %}
 
 {% endblock %}
+

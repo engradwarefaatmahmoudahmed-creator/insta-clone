@@ -6,7 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}Insta Clone{% endblock %}</title>
+    <title>
+        {% block title %}
+            Insta Clone
+        {% endblock %}
+    </title>
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
@@ -25,16 +29,16 @@
 
                 <div class="nav-links">
 
-                    <a href="{% url 'search_users' %}">
-                        🔍 Search
+                    <a href="{% url 'home' %}">
+                        Home
+                    </a>
+
+                    <a href="{% url 'profile' %}">
+                        Profile
                     </a>
 
                     <a href="{% url 'notifications' %}">
                         🔔 Notifications
-                    </a>
-
-                    <a href="{% url 'profile' %}">
-                        👤 Profile
                     </a>
 
                     <a href="{% url 'create_post' %}">
@@ -47,18 +51,44 @@
 
                 </div>
 
+            {% else %}
+
+                <div class="nav-links">
+
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+
+                    <a href="{% url 'register' %}">
+                        Register
+                    </a>
+
+                </div>
+
             {% endif %}
 
         </div>
 
     </nav>
 
-    <main class="container">
+
+    <main class="main-container">
 
         {% block content %}
+
         {% endblock %}
 
     </main>
 
+
+    <footer class="footer">
+
+        <p>
+            © 2026 Insta Clone — Built with Django ❤️
+        </p>
+
+    </footer>
+
 </body>
 </html>
+
