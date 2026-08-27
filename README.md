@@ -2,17 +2,18 @@
 
 A full-stack Instagram-style social media application built with **Python and Django**.
 
-This project demonstrates the development of a social media platform with user authentication, profiles, posts, likes, comments, following, search, and notifications.
+This project demonstrates a real-world social media platform with user authentication, profiles, posts, likes, comments, following, search, notifications, and responsive UI.
 
 ---
 
 ## 🚀 Features
 
-### 👤 User Authentication & Profiles
+### 👤 Authentication & Profiles
 
 * User registration
 * User login and logout
-* Custom User Model
+* Custom Django User Model
+* Unique email address
 * Profile picture
 * User bio
 * Edit profile
@@ -22,21 +23,24 @@ This project demonstrates the development of a social media platform with user a
 
 * Follow and unfollow users
 * Followers and following counts
-* Search for users
 * Personalized feed
+* User search
+* Social interactions between users
 
 ### 📸 Posts
 
 * Create posts with images
 * Add captions
-* View post details
+* Home feed
+* Following feed
+* Post details
 * Like and unlike posts
 * Delete your own posts
 
 ### 💬 Comments
 
 * Add comments to posts
-* Display comments
+* Display post comments
 * Delete your own comments
 
 ### 🔔 Notifications
@@ -45,28 +49,35 @@ This project demonstrates the development of a social media platform with user a
 * Like notifications
 * Comment notifications
 * Unread notifications counter
+* Read/unread notification state
 
-### 📱 Responsive Design
+### 📱 Responsive UI
 
 * Responsive layout
-* Mobile-friendly interface
-* Clean Instagram-inspired UI
+* Mobile-friendly design
+* Instagram-inspired interface
+* Clean and modern CSS styling
 
 ---
 
-## 🛠️ Technologies
+## 🛠️ Tech Stack
 
-* **Python**
-* **Django**
-* **SQLite**
-* **HTML5**
-* **CSS3**
-* **Pillow**
-* **Git & GitHub**
+| Technology | Usage                |
+| ---------- | -------------------- |
+| **Python** | Backend programming  |
+| **Django** | Web framework        |
+| **SQLite** | Development database |
+| **HTML5**  | Page structure       |
+| **CSS3**   | Responsive UI        |
+| **Pillow** | Image processing     |
+| **Git**    | Version control      |
+| **GitHub** | Source code hosting  |
 
 ---
 
-## 📂 Project Structure
+## 🏗️ Project Architecture
+
+The project is organized into separate Django applications according to their responsibilities:
 
 ```text
 Insta Clone/
@@ -77,6 +88,7 @@ Insta Clone/
 │   ├── admin.py
 │   ├── forms.py
 │   ├── models.py
+│   ├── tests.py
 │   ├── urls.py
 │   └── views.py
 │
@@ -86,6 +98,7 @@ Insta Clone/
 │   ├── admin.py
 │   ├── forms.py
 │   ├── models.py
+│   ├── tests.py
 │   ├── urls.py
 │   └── views.py
 │
@@ -112,6 +125,80 @@ Insta Clone/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
+
+---
+
+## 🧠 Django Concepts Demonstrated
+
+This project was built to practice and demonstrate practical Django backend development concepts:
+
+* Django Models
+* Model Relationships
+* `ForeignKey`
+* `ManyToManyField`
+* Custom User Model
+* Authentication
+* Forms
+* Views
+* URL Routing
+* Templates
+* CRUD Operations
+* File and Image Uploads
+* User Permissions
+* Notifications
+* Database Relationships
+* Automated Testing
+* Responsive Frontend Design
+
+---
+
+## 🧪 Testing
+
+The project includes automated tests covering important application functionality.
+
+Tests currently cover:
+
+* User creation
+* Email uniqueness
+* User authentication
+* Login and logout
+* Follow and unfollow
+* Post creation
+* Post validation behavior
+* Comments
+* Comment relationships
+* Likes and unlikes
+* Multiple users liking posts
+* Notifications
+* Read/unread notifications
+
+Run the complete test suite with:
+
+```bash
+python manage.py test
+```
+
+Current result:
+
+```text
+Found 14 test(s).
+
+Ran 14 tests
+
+OK
+```
+
+Django system checks also pass successfully:
+
+```bash
+python manage.py check
+```
+
+Result:
+
+```text
+System check identified no issues (0 silenced).
 ```
 
 ---
@@ -150,7 +237,7 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 6. Apply database migrations
+### 6. Apply migrations
 
 ```bash
 python manage.py migrate
@@ -168,7 +255,7 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Open the application in your browser:
+Open the application:
 
 ```text
 http://127.0.0.1:8000/
@@ -176,66 +263,49 @@ http://127.0.0.1:8000/
 
 ---
 
-## 🧪 Project Testing
+## 🔐 Security Notes
 
-The project was tested using Django's system check command:
+For development, the project uses SQLite and Django's development server.
 
-```bash
-python manage.py check
-```
+Before production deployment, the following should be configured:
 
-Result:
-
-```text
-System check identified no issues (0 silenced).
-```
-
-Core application features were also manually tested, including:
-
-* User authentication
-* Profiles
-* Posts
-* Likes
-* Comments
-* Following and unfollowing
-* User search
-* Notifications
-
----
-
-## 🎯 Project Goals
-
-The main goal of this project was to build a practical Django application that demonstrates real-world backend development concepts, including:
-
-* Django Models
-* Views and URLs
-* Templates
-* Forms
-* Authentication
-* Database relationships
-* File and image uploads
-* User interactions
-* Notifications
-* CRUD operations
-* Responsive frontend design
+* Environment variables for secrets
+* `DEBUG = False`
+* Production `ALLOWED_HOSTS`
+* PostgreSQL or another production database
+* Secure media storage
+* Static file collection
+* HTTPS
+* Production WSGI/ASGI configuration
 
 ---
 
 ## 🔮 Future Improvements
 
-Possible future improvements include:
+Planned improvements include:
 
-* Direct messaging
-* Stories
-* Post sharing
-* Hashtags
-* Advanced search
-* Pagination
-* REST API using Django REST Framework
-* AJAX-based interactions
-* Production deployment
-* PostgreSQL database
-* Cloud media storage
+* 💬 Direct messaging
+* 📖 Stories
+* 🔗 Post sharing
+* #️⃣ Hashtags
+* 🔎 Advanced search
+* 📄 Pagination
+* ⚡ AJAX interactions
+* 🔌 Django REST Framework API
+* 🗄️ PostgreSQL
+* ☁️ Cloud media storage
+* 🚀 Production deployment
+* 🧪 Expanded integration and view tests
+
+---
+
+## 📌 Project Status
+
+**Current status: Active Development**
+
+The core social media functionality is implemented and tested.
+
+The project is being continuously improved with additional backend features, testing, UI improvements, and production-ready architecture.
 
 ---
 
@@ -243,4 +313,10 @@ Possible future improvements include:
 
 **Radwa Refaat Mahmoud Ahmed**
 
-Backend Django Developer | Python & Django Instructor | Software Engineer
+**Backend Django Developer | Python & Django Instructor | Software Engineer**
+
+---
+
+## 📄 License
+
+This project is intended for educational and portfolio purposes.
